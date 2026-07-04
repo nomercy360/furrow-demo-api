@@ -22,6 +22,9 @@ import java.util.concurrent.atomic.LongAdder;
  *               canary release misbehave on purpose so the metric gate trips
  *   FAIL        "true" = fail every "/" request; the boolean form of FAIL_RATE.
  *               furrow's canaryFail knob injects exactly this env on the canary.
+ *   EXIT_AFTER_START "true" = exit with EXIT_AFTER_START_CODE after startup delay.
+ *   EXIT_AFTER_START_SECONDS startup delay before exiting (default 5)
+ *   EXIT_AFTER_START_CODE process exit code when EXIT_AFTER_START=true (default 42)
  */
 public final class Api {
 
@@ -113,10 +116,31 @@ public final class Api {
         }
         Api api = new Api(port, version, failRate);
         api.start();
+        maybeExitAfterStart();
         // Demo-only: prove the sealed-values -> Secret -> env chain end to end.
         // Never log secrets in a real service.
         System.out.printf("furrow-demo-api version=%s port=%d failRate=%.2f secretMessage=%s%n",
                 version, port, failRate, env("SECRET_MESSAGE", "<unset>"));
+    }
+
+    private static void maybeExitAfterStart() {
+        if (!Boolean.parseBoolean(env("EXIT_AFTER_START", "false"))) {
+            return;
+        }
+        int seconds = Integer.parseInt(env("EXIT_AFTER_START_SECONDS", "5"));
+        int code = Integer.parseInt(env("EXIT_AFTER_START_CODE", "42"));
+        Thread exitThread = new Thread(() -> {
+            try {
+                Thread.sleep(seconds * 1000L);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+            System.err.printf("EXIT_AFTER_START=true; exiting with code %d after %d seconds%n", code, seconds);
+            System.exit(code);
+        }, "exit-after-start");
+        exitThread.setDaemon(true);
+        exitThread.start();
     }
 
     private static String env(String key, String def) {
