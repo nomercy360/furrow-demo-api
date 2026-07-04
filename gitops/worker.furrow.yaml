@@ -6,7 +6,7 @@ valuesFiles:
   - secrets.yaml
 values:
   replicas: 1
-  appVersion: "1.1.0"
+  appVersion: "1.2.0"
 
   # Same image, also auto-bumped — but this release is ungated, so a bump rolls
   # it directly on the next sync (the api release canaries the same change).
