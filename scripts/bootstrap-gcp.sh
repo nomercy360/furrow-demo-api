@@ -19,6 +19,9 @@ MACHINE="${MACHINE:-e2-standard-2}"
 echo ">> enabling container API on ${PROJECT_ID}"
 gcloud services enable container.googleapis.com --project "${PROJECT_ID}"
 
+if gcloud container clusters describe "${CLUSTER}" --project "${PROJECT_ID}" --zone "${ZONE}" >/dev/null 2>&1; then
+  echo ">> cluster ${CLUSTER} already exists, skipping create"
+else
 echo ">> creating zonal cluster ${CLUSTER} (${MACHINE}, spot) in ${ZONE}"
 gcloud container clusters create "${CLUSTER}" \
   --project "${PROJECT_ID}" \
@@ -31,6 +34,7 @@ gcloud container clusters create "${CLUSTER}" \
   --logging SYSTEM \
   --monitoring SYSTEM \
   --no-enable-managed-prometheus
+fi
 
 gcloud container clusters get-credentials "${CLUSTER}" --project "${PROJECT_ID}" --zone "${ZONE}"
 
