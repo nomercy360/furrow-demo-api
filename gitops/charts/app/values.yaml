@@ -3,7 +3,7 @@
 replicas: 1
 appVersion: "0.0.0"
 image: ""
-canaryFail: false
+canaryFail: true
 versionLabels: false
 service:
   enabled: false

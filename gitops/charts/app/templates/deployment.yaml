@@ -43,7 +43,7 @@ spec:
             # Bad-release knob: rendered only when on, so the render diff
             # triggers a canary that 500s everything; stable keeps the old
             # render (without this env) because the gate never passes.
-            - name: FAIL
+            - name: EXIT_AFTER_START
               value: "true"
             {{- end }}
           envFrom:
