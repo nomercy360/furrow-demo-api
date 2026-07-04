@@ -12,7 +12,7 @@ values:
 
   # furrow's image automation tracks the newest CI build; with render-gating the
   # bump IS the release (canary ramp -> gates -> snapshot advance).
-  image: ghcr.io/nomercy360/furrow-demo-api:main-afbd90f-1783133974 # furrow:extract:numeric:^main-[a-f0-9]+-(?P<ts>\d+)$
+  image: ghcr.io/nomercy360/furrow-demo-api:main-09ce8f4-1783137102 # furrow:extract:numeric:^main-[a-f0-9]+-(?P<ts>\d+)$
 
   canaryFail: false  # true renders FAIL=true -> the gate catches it -> rollback
   versionLabels: true # canary identity (version: stable) — required for the gated workload
