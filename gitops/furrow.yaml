@@ -8,6 +8,7 @@ valuesFiles:
   - secrets.yaml # age-encrypted; furrow decrypts in-memory (FURROW_DECRYPT=age)
 values:
   replicas: 1
+  # hello
   appVersion: "1.1.0"
 
   # furrow's image automation tracks the newest CI build; with render-gating the
