@@ -113,7 +113,10 @@ public final class Api {
         }
         Api api = new Api(port, version, failRate);
         api.start();
-        System.out.printf("furrow-demo-api version=%s port=%d failRate=%.2f%n", version, port, failRate);
+        // Demo-only: prove the sealed-values -> Secret -> env chain end to end.
+        // Never log secrets in a real service.
+        System.out.printf("furrow-demo-api version=%s port=%d failRate=%.2f secretMessage=%s%n",
+                version, port, failRate, env("SECRET_MESSAGE", "<unset>"));
     }
 
     private static String env(String key, String def) {

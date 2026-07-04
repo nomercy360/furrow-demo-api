@@ -3,10 +3,10 @@ appVersion: "1.0.0"
 
 # Stable image. On a successful canary promote, furrow rewrites this key to the
 # canary image and commits ("fold"), then scales the canary to 0.
-image: ghcr.io/nomercy360/furrow-demo-api:latest
+image: ghcr.io/nomercy360/furrow-demo-api:90e330c59ec17575cf8047355ffba208890550ca
 
 # The release candidate: bump this + canary.yaml's revision to start a rollout.
-canaryImage: ghcr.io/nomercy360/furrow-demo-api:latest
+canaryImage: ghcr.io/nomercy360/furrow-demo-api:90e330c59ec17575cf8047355ffba208890550ca
 
 # true = furrow injects FAIL=true into the derived canary -> every request 500s
 # -> the Prometheus gate trips -> auto-rollback. The bad-release demo knob.

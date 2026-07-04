@@ -6,3 +6,4 @@ chart: ./chart
 releaseName: demo-api
 valuesFiles:
   - values.yaml
+  - secrets.yaml # age-encrypted; furrow decrypts in-memory (FURROW_DECRYPT=age)

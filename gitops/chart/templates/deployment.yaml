@@ -23,6 +23,9 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
         prometheus.io/path: /metrics
+        # A changed secret changes this hash -> pod template changes -> rollout.
+        # SSA-applied, so it works without helm hooks or a reloader operator.
+        checksum/secret: {{ .Values.secretMessage | sha256sum }}
     spec:
       containers:
         - name: api
@@ -32,6 +35,9 @@ spec:
           env:
             - name: APP_VERSION
               value: {{ .Values.appVersion | quote }}
+          envFrom:
+            - secretRef:
+                name: demo-api-secret
           readinessProbe:
             httpGet:
               path: /healthz
