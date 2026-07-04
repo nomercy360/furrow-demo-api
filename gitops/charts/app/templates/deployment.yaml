@@ -1,0 +1,73 @@
+# Generic workload — everything is named for the release, so one chart serves
+# demo-api and demo-worker. versionLabels adds the `version: stable` identity a
+# canary-gated workload needs (furrow's derived canary and the DR subsets match
+# on it); leave it off for ungated releases.
+{{- $labels := dict "app" .Release.Name }}
+{{- if .Values.versionLabels }}{{- $_ := set $labels "version" "stable" }}{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels: {{ $labels | toYaml | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ $labels | toYaml | nindent 8 }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: /metrics
+        {{- if .Values.appSecret.enabled }}
+        # A changed secret changes this hash -> pod template changes -> for a
+        # canary-gated release the render diff ramps through the gate first.
+        checksum/secret: {{ .Values.secretMessage | sha256sum }}
+        {{- end }}
+        {{- if .Values.dbEnv.enabled }}
+        # Rolls (or canaries, if gated) the workload when the DB credential rotates.
+        checksum/db: {{ .Values.dbPassword | sha256sum }}
+        {{- end }}
+    spec:
+      containers:
+        - name: app
+          image: {{ .Values.image }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_VERSION
+              value: {{ .Values.appVersion | quote }}
+            {{- if .Values.canaryFail }}
+            # Bad-release knob: rendered only when on, so the render diff
+            # triggers a canary that 500s everything; stable keeps the old
+            # render (without this env) because the gate never passes.
+            - name: FAIL
+              value: "true"
+            {{- end }}
+          envFrom:
+            {{- if .Values.appSecret.enabled }}
+            - secretRef:
+                name: {{ .Release.Name }}-secret
+            {{- end }}
+            {{- if .Values.dbEnv.enabled }}
+            - configMapRef:
+                name: demo-db-config
+            - secretRef:
+                name: demo-db-secret
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              memory: 64Mi

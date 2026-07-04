@@ -1,0 +1,15 @@
+# Chart defaults — every release overrides what it needs (values-api.yaml,
+# values-worker.yaml). The sealed secrets.yaml supplies secretMessage/dbPassword.
+replicas: 1
+appVersion: "0.0.0"
+image: ""
+canaryFail: false
+versionLabels: false
+service:
+  enabled: false
+loadgen:
+  enabled: false
+appSecret:
+  enabled: false
+dbEnv:
+  enabled: false

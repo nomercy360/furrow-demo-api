@@ -1,9 +1,9 @@
-# furrow render config for this path: helm-template the local chart, apply the
-# output through furrow's normal SSA + prune pipeline (one inventory, no Helm
-# release secrets). Needs the helm-enabled furrow build (-tags helm).
+# Main release: the canary-gated API. Sibling *.furrow.yaml files declare the
+# other releases (Flux-style, one file per release); everything renders into
+# furrow's single SSA + prune inventory.
 render: helm
-chart: ./chart
+chart: ./charts/app
 releaseName: demo-api
 valuesFiles:
-  - values.yaml
+  - values-api.yaml
   - secrets.yaml # age-encrypted; furrow decrypts in-memory (FURROW_DECRYPT=age)

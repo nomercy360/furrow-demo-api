@@ -1,0 +1,6 @@
+# The database, its own chart. dbPassword comes from the sealed values.
+chart: ./charts/postgres
+releaseName: db
+valuesFiles:
+  - values-db.yaml
+  - secrets.yaml

@@ -1,0 +1,7 @@
+# Second workload, same chart, own values — NOT canary-gated (only demo-api,
+# named by canary.yaml's promote.workload, is).
+chart: ./charts/app
+releaseName: demo-worker
+valuesFiles:
+  - values-worker.yaml
+  - secrets.yaml

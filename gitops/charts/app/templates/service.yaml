@@ -1,15 +1,17 @@
+{{- if .Values.service.enabled }}
 # Selects on `app` only (no version label), so it spans stable AND canary pods;
 # the DestinationRule subsets split them for the weighted routes.
 apiVersion: v1
 kind: Service
 metadata:
-  name: demo-api
+  name: {{ .Release.Name }}
   labels:
-    app: demo-api
+    app: {{ .Release.Name }}
 spec:
   selector:
-    app: demo-api
+    app: {{ .Release.Name }}
   ports:
     - name: http
       port: 80
       targetPort: 8080
+{{- end }}

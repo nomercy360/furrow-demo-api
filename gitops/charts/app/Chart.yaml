@@ -1,0 +1,6 @@
+apiVersion: v2
+name: app
+description: Reusable app chart — one release per workload (demo-api, demo-worker)
+type: application
+version: 0.2.0
+appVersion: "1.0"
