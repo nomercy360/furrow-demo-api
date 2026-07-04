@@ -9,7 +9,7 @@ valuesFiles:
 values:
   replicas: 1
   # hello
-  appVersion: "1.1.1"
+  appVersion: "1.1.2"
 
   # furrow's image automation tracks the newest CI build; with render-gating the
   # bump IS the release (canary ramp -> gates -> snapshot advance).
