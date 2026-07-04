@@ -10,4 +10,4 @@ image: ghcr.io/nomercy360/furrow-demo-api:main-09ce8f4-1783137102 # furrow:extra
 # true renders FAIL=true into the deployment env -> the render diff triggers a
 # canary whose requests all 500 -> the Prometheus gate trips -> auto-rollback,
 # and stable (still on the old render, without FAIL) never sees it.
-canaryFail: false
+canaryFail: true
