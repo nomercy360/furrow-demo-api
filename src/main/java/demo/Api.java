@@ -20,6 +20,8 @@ import java.util.concurrent.atomic.LongAdder;
  *   APP_VERSION reported version, shows up in responses and metrics (default "dev")
  *   FAIL_RATE   fraction [0.0..1.0] of "/" requests answered with 500 — lets a
  *               canary release misbehave on purpose so the metric gate trips
+ *   FAIL        "true" = fail every "/" request; the boolean form of FAIL_RATE.
+ *               furrow's canaryFail knob injects exactly this env on the canary.
  */
 public final class Api {
 
@@ -106,6 +108,9 @@ public final class Api {
         int port = Integer.parseInt(env("PORT", "8080"));
         String version = env("APP_VERSION", "dev");
         double failRate = Double.parseDouble(env("FAIL_RATE", "0"));
+        if (Boolean.parseBoolean(env("FAIL", "false"))) {
+            failRate = 1.0;
+        }
         Api api = new Api(port, version, failRate);
         api.start();
         System.out.printf("furrow-demo-api version=%s port=%d failRate=%.2f%n", version, port, failRate);

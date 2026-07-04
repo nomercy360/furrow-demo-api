@@ -1,0 +1,8 @@
+# furrow render config for this path: helm-template the local chart, apply the
+# output through furrow's normal SSA + prune pipeline (one inventory, no Helm
+# release secrets). Needs the helm-enabled furrow build (-tags helm).
+render: helm
+chart: ./chart
+releaseName: demo-api
+valuesFiles:
+  - values.yaml

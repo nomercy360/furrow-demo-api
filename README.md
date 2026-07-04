@@ -42,10 +42,22 @@ Defaults to project `test-5b7c2`, zone `europe-west1-b`; override via env
 ```bash
 ./scripts/bootstrap-gcp.sh              # zonal GKE, 1x e2-standard-2 Spot node
 ./scripts/bootstrap-gcp.sh --with-istio # + Istio (ClusterIP gateway) + minimal Prometheus
-kubectl apply -f k8s/                   # deploy the demo API
 
 ./scripts/teardown-gcp.sh               # delete everything
 ```
+
+## GitOps layout (managed by furrow)
+
+`gitops/` is the path furrow watches — nothing in it is applied by hand:
+
+- `gitops/furrow.yaml` — render mode: helm-template `gitops/chart/` in-process
+- `gitops/values.yaml` — `image` (stable), `canaryImage` (candidate), `canaryFail` (bad-release knob)
+- `gitops/canary.yaml` — the progressive-delivery spec: bump `revision` to start a
+  rollout; furrow derives `demo-api-canary` from the stable Deployment, creates the
+  Istio VirtualService/DestinationRule, ramps weights, gates on Prometheus, and
+  auto-rolls-back on breach. On success it commits the canary image into `image`.
+- `gitops/chart/` — the Helm chart: stable Deployment, Service, and a tiny curl
+  loadgen so the mesh always has request metrics to gate on.
 
 Why this is the cheap configuration:
 

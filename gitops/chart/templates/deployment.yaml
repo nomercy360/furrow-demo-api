@@ -1,3 +1,7 @@
+# The STABLE deployment only. furrow derives demo-api-canary from this at
+# rollout time (name, version label, image, optional FAIL env all overridden).
+# The `version: stable` pod label is what the DestinationRule's stable subset
+# selects — it must match the canary spec's stableSubset (default "stable").
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,14 +9,16 @@ metadata:
   labels:
     app: demo-api
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       app: demo-api
+      version: stable
   template:
     metadata:
       labels:
         app: demo-api
+        version: stable
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
@@ -20,14 +26,12 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/nomercy360/furrow-demo-api:latest
+          image: {{ .Values.image }}
           ports:
             - containerPort: 8080
           env:
             - name: APP_VERSION
-              value: "0.1.0"
-            - name: FAIL_RATE
-              value: "0"
+              value: {{ .Values.appVersion | quote }}
           readinessProbe:
             httpGet:
               path: /healthz
