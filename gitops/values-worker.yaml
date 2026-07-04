@@ -1,9 +1,0 @@
-replicas: 1
-appVersion: "1.1.0"
-
-# Same image, also auto-bumped — but this release is ungated, so a bump rolls
-# it directly on the next sync (the api release canaries the same change).
-image: ghcr.io/nomercy360/furrow-demo-api:main-09ce8f4-1783137102 # furrow:extract:numeric:^main-[a-f0-9]+-(?P<ts>\d+)$
-
-dbEnv:
-  enabled: true

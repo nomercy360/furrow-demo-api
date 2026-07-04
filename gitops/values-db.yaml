@@ -1,6 +1,0 @@
-db:
-  name: demo
-  user: demo
-postgres:
-  image: postgres:17-alpine
-  storage: 1Gi
