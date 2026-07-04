@@ -7,5 +7,4 @@ releaseName: demo-api
 valuesFiles:
   - values-api.yaml
   - secrets.yaml # age-encrypted; furrow decrypts in-memory (FURROW_DECRYPT=age)
-values:
 
