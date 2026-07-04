@@ -1,14 +1,11 @@
-# furrow canary spec — plain YAML, no CRD. Bump `revision` to start a rollout:
-# furrow derives demo-api-canary from the stable Deployment (image = values
-# canaryImage), creates/owns the VirtualService + DestinationRule, ramps the
-# weight through the steps, and gates each step on the Prometheus query.
-revision: "2"
-
+# furrow canary spec — plain YAML, no CRD, and NO trigger field: stable runs
+# the last-promoted render of the workload below; any change to its rendered
+# manifest in git (image bump, env change, secret checksum) IS the release.
+# furrow derives demo-api-canary from HEAD's render, creates/owns the
+# VirtualService + DestinationRule, ramps the weight through the steps, gates
+# each step on Prometheus, and rolls back without ever touching stable.
 promote:
-  workload: demo-api # the stable Deployment; everything else derives from this
-  # Explicit: the default is <chart>/values.yaml, but ours lives at the gitops
-  # path root (it's in furrow.yaml valuesFiles, not inside the chart).
-  valuesFile: values.yaml
+  workload: demo-api # the ONE required name — everything else derives from it
 
 # Let furrow create the VS itself (mesh-internal host = the Service name).
 route:
@@ -20,7 +17,8 @@ steps:
   - { weight: 80, pause: 45s }
 
 analysis:
-  # Canary success rate over the last minute, as seen by the mesh. Must stay >= 95%.
+  # Canary success rate, as seen by the mesh. Window must be >= 2x the
+  # Prometheus scrape interval (1m here). Must stay >= 95%.
   query: >-
     sum(rate(istio_requests_total{destination_workload="demo-api-canary",response_code!~"5.."}[2m]))
     /

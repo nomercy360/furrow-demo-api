@@ -35,6 +35,13 @@ spec:
           env:
             - name: APP_VERSION
               value: {{ .Values.appVersion | quote }}
+            {{- if .Values.canaryFail }}
+            # Rendered only when the bad-release knob is on: the render diff
+            # triggers a canary that 500s every request; stable keeps the old
+            # render (without this env) until the gate would pass — it won't.
+            - name: FAIL
+              value: "true"
+            {{- end }}
           envFrom:
             - secretRef:
                 name: demo-api-secret
