@@ -12,9 +12,9 @@ route:
   hosts: [demo-api]
 
 steps:
-  - { weight: 20, pause: 45s }
-  - { weight: 50, pause: 45s }
-  - { weight: 80, pause: 45s }
+  - { weight: 20, pause: 15s }
+  - { weight: 50, pause: 15s }
+  - { weight: 80, pause: 15s }
 
 analysis:
   # Canary success rate, as seen by the mesh. Window must be >= 2x the
@@ -26,4 +26,4 @@ analysis:
   threshold: 0.95
   noDataTimeout: 3m
 
-progressDeadline: 10m
+progressDeadline: 3m
