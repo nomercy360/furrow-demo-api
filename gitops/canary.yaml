@@ -2,7 +2,7 @@
 # furrow derives demo-api-canary from the stable Deployment (image = values
 # canaryImage), creates/owns the VirtualService + DestinationRule, ramps the
 # weight through the steps, and gates each step on the Prometheus query.
-revision: "1"
+revision: "2"
 
 promote:
   workload: demo-api # the stable Deployment; everything else derives from this
