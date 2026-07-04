@@ -8,7 +8,7 @@ image: ghcr.io/nomercy360/furrow-demo-api:8d5c367228f8f70bac1f841ca700aab8269ae1
 # The release candidate. furrow's image automation keeps this pointed at the
 # newest CI build (ordered by the timestamp in main-<sha>-<epoch> tags); bumping
 # canary.yaml's revision then ramps whatever candidate is current.
-canaryImage: ghcr.io/nomercy360/furrow-demo-api:main-b928b07-1783133612 # furrow:extract:numeric:^main-[a-f0-9]+-(?P<ts>\d+)$
+canaryImage: ghcr.io/nomercy360/furrow-demo-api:main-7bfff11-1783133737 # furrow:extract:numeric:^main-[a-f0-9]+-(?P<ts>\d+)$
 
 # true = furrow injects FAIL=true into the derived canary -> every request 500s
 # -> the Prometheus gate trips -> auto-rollback. The bad-release demo knob.
