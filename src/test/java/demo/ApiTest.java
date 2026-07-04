@@ -51,6 +51,21 @@ class ApiTest {
     }
 
     @Test
+    void healthzNotReadyWhenConfiguredToExitAfterStart() throws Exception {
+        Api exiting = new Api(0, "test-1.0", 0.0, true);
+        exiting.start();
+        try {
+            HttpResponse<String> res = client.send(
+                    HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + exiting.port() + "/healthz")).build(),
+                    HttpResponse.BodyHandlers.ofString());
+            assertEquals(503, res.statusCode());
+            assertEquals("exiting after start\n", res.body());
+        } finally {
+            exiting.stop();
+        }
+    }
+
+    @Test
     void metricsExposeCounters() throws Exception {
         get("/");
         HttpResponse<String> res = get("/metrics");

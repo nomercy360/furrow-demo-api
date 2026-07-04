@@ -30,12 +30,18 @@ public final class Api {
 
     private final String version;
     private final double failRate;
+    private final boolean exitAfterStart;
     private final ConcurrentHashMap<String, LongAdder> requests = new ConcurrentHashMap<>();
     private final HttpServer server;
 
     public Api(int port, String version, double failRate) throws IOException {
+        this(port, version, failRate, false);
+    }
+
+    public Api(int port, String version, double failRate, boolean exitAfterStart) throws IOException {
         this.version = version;
         this.failRate = failRate;
+        this.exitAfterStart = exitAfterStart;
         this.server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", this::root);
         server.createContext("/healthz", this::healthz);
@@ -73,6 +79,11 @@ public final class Api {
     }
 
     private void healthz(HttpExchange ex) throws IOException {
+        if (exitAfterStart) {
+            count("/healthz", 503);
+            respond(ex, 503, "text/plain", "exiting after start\n");
+            return;
+        }
         count("/healthz", 200);
         respond(ex, 200, "text/plain", "ok\n");
     }
@@ -114,17 +125,18 @@ public final class Api {
         if (Boolean.parseBoolean(env("FAIL", "false"))) {
             failRate = 1.0;
         }
-        Api api = new Api(port, version, failRate);
+        boolean exitAfterStart = Boolean.parseBoolean(env("EXIT_AFTER_START", "false"));
+        Api api = new Api(port, version, failRate, exitAfterStart);
         api.start();
-        maybeExitAfterStart();
+        maybeExitAfterStart(exitAfterStart);
         // Demo-only: prove the sealed-values -> Secret -> env chain end to end.
         // Never log secrets in a real service.
         System.out.printf("furrow-demo-api version=%s port=%d failRate=%.2f secretMessage=%s%n",
                 version, port, failRate, env("SECRET_MESSAGE", "<unset>"));
     }
 
-    private static void maybeExitAfterStart() {
-        if (!Boolean.parseBoolean(env("EXIT_AFTER_START", "false"))) {
+    private static void maybeExitAfterStart(boolean exitAfterStart) {
+        if (!exitAfterStart) {
             return;
         }
         int seconds = Integer.parseInt(env("EXIT_AFTER_START_SECONDS", "5"));
