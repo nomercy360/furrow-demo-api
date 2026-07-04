@@ -10,7 +10,7 @@ values:
 
   # Same image, also auto-bumped — but this release is ungated, so a bump rolls
   # it directly on the next sync (the api release canaries the same change).
-  image: ghcr.io/nomercy360/furrow-demo-api:main-173f1c4-1783163185 # furrow:extract:numeric:^main-[a-f0-9]+-(?P<ts>\d+)$
+  image: ghcr.io/nomercy360/furrow-demo-api:main-8c39f67-1783163935 # furrow:extract:numeric:^main-[a-f0-9]+-(?P<ts>\d+)$
 
   dbEnv:
     enabled: true
