@@ -15,7 +15,7 @@ values:
   # bump IS the release (canary ramp -> gates -> snapshot advance).
   image: ghcr.io/nomercy360/furrow-demo-api:main-8c39f67-1783163935 # furrow:extract:numeric:^main-[a-f0-9]+-(?P<ts>\d+)$
 
-  canaryFail: false  # true renders FAIL=true -> the gate catches it -> rollback
+  canaryFail: true  # true renders FAIL=true -> the gate catches it -> rollback
   versionLabels: true # canary identity (version: stable) — required for the gated workload
   service:
     enabled: true
