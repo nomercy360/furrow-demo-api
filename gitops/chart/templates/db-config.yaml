@@ -1,0 +1,13 @@
+# Non-sensitive database coordinates — both workloads envFrom this. The
+# credential half lives in demo-db-secret (from the sealed values file).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-db-config
+  labels:
+    app: postgres
+data:
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_NAME: {{ .Values.db.name | quote }}
+  DB_USER: {{ .Values.db.user | quote }}
