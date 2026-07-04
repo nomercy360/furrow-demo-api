@@ -1,5 +1,5 @@
 replicas: 1
-appVersion: "1.0.0"
+appVersion: "1.1.0"
 
 # THE image. furrow's image automation keeps it pointed at the newest CI build
 # (ordered by the timestamp in main-<sha>-<epoch> tags) — and with render-gating
