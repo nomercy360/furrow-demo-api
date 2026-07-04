@@ -5,7 +5,7 @@ appVersion: "1.1.0"
 # (ordered by the timestamp in main-<sha>-<epoch> tags) — and with render-gating
 # that bump IS the release: the canary ramps HEAD's render and stable only
 # rolls when the gates pass (the last-promoted render is held until then).
-image: ghcr.io/nomercy360/furrow-demo-api:main-afbd90f-1783133974 # furrow:extract:numeric:^main-[a-f0-9]+-(?P<ts>\d+)$
+image: ghcr.io/nomercy360/furrow-demo-api:main-09ce8f4-1783137102 # furrow:extract:numeric:^main-[a-f0-9]+-(?P<ts>\d+)$
 
 # true renders FAIL=true into the deployment env -> the render diff triggers a
 # canary whose requests all 500 -> the Prometheus gate trips -> auto-rollback,
