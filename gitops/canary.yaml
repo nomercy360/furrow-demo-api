@@ -22,9 +22,9 @@ steps:
 analysis:
   # Canary success rate over the last minute, as seen by the mesh. Must stay >= 95%.
   query: >-
-    sum(rate(istio_requests_total{destination_workload="demo-api-canary",response_code!~"5.."}[1m]))
+    sum(rate(istio_requests_total{destination_workload="demo-api-canary",response_code!~"5.."}[2m]))
     /
-    sum(rate(istio_requests_total{destination_workload="demo-api-canary"}[1m]))
+    sum(rate(istio_requests_total{destination_workload="demo-api-canary"}[2m]))
   threshold: 0.95
   noDataTimeout: 3m
 
