@@ -6,6 +6,9 @@ revision: "2"
 
 promote:
   workload: demo-api # the stable Deployment; everything else derives from this
+  # Explicit: the default is <chart>/values.yaml, but ours lives at the gitops
+  # path root (it's in furrow.yaml valuesFiles, not inside the chart).
+  valuesFile: values.yaml
 
 # Let furrow create the VS itself (mesh-internal host = the Service name).
 route:

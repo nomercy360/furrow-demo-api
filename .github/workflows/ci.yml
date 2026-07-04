@@ -3,6 +3,11 @@ name: CI
 on:
   push:
     branches: [main]
+    # gitops/ holds deploy state that furrow itself commits to (image bumps,
+    # promote folds). Rebuilding the image on those commits would create a
+    # build->bump->build feedback loop.
+    paths-ignore:
+      - "gitops/**"
   pull_request:
 
 permissions:
