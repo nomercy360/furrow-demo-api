@@ -3,7 +3,7 @@ appVersion: "1.0.0"
 
 # Stable image. On a successful canary promote, furrow rewrites this key to the
 # canary image and commits ("fold"), then scales the canary to 0.
-image: ghcr.io/nomercy360/furrow-demo-api:8d5c367228f8f70bac1f841ca700aab8269ae185
+image: ghcr.io/nomercy360/furrow-demo-api:main-afbd90f-1783133974
 
 # The release candidate. furrow's image automation keeps this pointed at the
 # newest CI build (ordered by the timestamp in main-<sha>-<epoch> tags); bumping
